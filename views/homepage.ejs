@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my chat app</title>
+    <script src="https://cdn.socket.io/4.7.3/socket.io.min.js" integrity="sha384-+miq58Ltmjm+SSP5g8Ok6dpMO/6R4n8xe/x1Yj0Bdb9kiEz25LTnWv/GZQTRQamg" crossorigin="anonymous"></script>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    h2 {
+        color: #007bff;
+    }
+
+    input.btn {
+        padding: 5px;
+        margin-right: 5px;
+    }
+
+    button {
+        padding: 8px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+    }
+</style>
+<body>
+    <h1></h1>
+    <h2></h2>
+
+    <input type="text" class = "btn">
+    <button onclick="chatFun()">SEND CHAT</button>
+    
+<script>
+    const userName = prompt("what is your name")
+    document.querySelector("h1").innerHTML= `hello ${userName} welcome to my chat application`
+
+const socket = io("http://localhost:4040");
+        const messages = [];
+
+socket.on("message",(data)=>{
+
+    messages.push(data);
+    updateChat()
+    document.querySelector("h2").innerHTML = data
+
+})
+
+const chatFun = ()=>{
+    const messageInfo = document.querySelector(".btn").value
+const message=  `message from ${userName} : ${messageInfo}`
+
+    socket.emit("message",message)
+    messages.push(message)
+    updateChat()
+}
+
+const updateChat= ()=>{
+    document.querySelector("h2").innerHTML=messages.join("<br>")
+}
+   
+
+
+</script>
+
+</body>
+</html>
